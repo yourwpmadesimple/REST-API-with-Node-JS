@@ -84,3 +84,21 @@ module.exports = {
 const { Routes } = require("./routes/Routes");
 Routes();
 ```
+
+### 6. Create Post Endpoit Route
+> Utilizing fs, lodash and uuid
+```javascript
+router.post('/comments', async(req, res) => {
+    const id = uuid()
+    const content = req.body.content
+
+    if (!content) {
+        return res.sendStatus(400)
+    }
+
+    await fs.mkdir("data/comments", { recursive: true })
+    await fs.writeFile(`data/comments/${id}.text`, content)
+
+    res.sendStatus(201)
+})
+```
