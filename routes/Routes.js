@@ -1,11 +1,14 @@
 const fs = require('fs/promises')
 const express = require('express')
+const cors = require('cors')
 const _ = require('lodash')
 const { v4: uuid } = require('uuid')
 const router = express.Router()
 
 
 router.use(express.json())
+router.use(express.cors())
+
 
 
 router.get('/', (req, res) => {
@@ -32,9 +35,26 @@ router.post('/comments', async(req, res) => {
     }
 
     await fs.mkdir("data/comments", { recursive: true })
-    await fs.writeFile(`data/comments/${id}.text`, content)
+    await fs.writeFile(`data/comments/${id}.txt`, content)
+    console.log(id)
+    res.status(201).json({
+        id: id
+    })
+})
 
-    res.sendStatus(201)
+router.get("/comments/:id", async(req, res) => {
+    const id = req.params.id
+    let content;
+
+    try {
+        content = await fs.readFile(`./data/comments/${id}.txt`, 'utf-8')
+    } catch (err) {
+        // TODO
+        return res.sendStatus(404)
+    }
+    res.json({
+        content: content
+    })
 })
 
 

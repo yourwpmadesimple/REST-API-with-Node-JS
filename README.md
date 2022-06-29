@@ -102,3 +102,21 @@ router.post('/comments', async(req, res) => {
     res.sendStatus(201)
 })
 ```
+
+### 7. Get Comments by ID
+```javascript
+router.get("/comments/:id", async(req, res) => {
+    const id = req.params.id
+    let content;
+
+    try {
+        content = await fs.readFile(`./data/comments/${id}.txt`, 'utf-8')
+    } catch (err) {
+        // TODO
+        return res.sendStatus(404)
+    }
+    res.json({
+        content: content
+    })
+})
+```
